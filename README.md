@@ -1,5 +1,5 @@
-# mkaqx_india
-Air Quality Monitoring Application for Mekong
+# aqx_india
+Air Quality Monitoring Application
 
 # Required python packages:
 shapely
