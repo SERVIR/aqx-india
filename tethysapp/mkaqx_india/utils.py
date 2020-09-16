@@ -7,7 +7,7 @@ import numpy as np
 import shapely.geometry
 import shapely
 import netCDF4
-from tethysapp.mkaqx_india.config import THREDDS_CATALOG, THREDDS_wms, DATA_DIR, LOG_DIR, GIF_DIR
+from tethysapp.aqx_india.config import THREDDS_CATALOG, THREDDS_wms, DATA_DIR, LOG_DIR, GIF_DIR
 from shapely.geometry import Polygon
 import logging
 from datetime import datetime,timedelta
@@ -17,7 +17,7 @@ import requests
 from PIL import Image,ImageFile,ImageFont,ImageDraw,ImageChops,ImageOps
 import imageio
 from django.views.decorators.csrf import csrf_exempt
-import tethysapp.mkaqx_india.config as cfg
+import tethysapp.aqx_india.config as cfg
 from geopy.distance import great_circle
 from geopy.distance import geodesic
 from itertools import *
@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 
 logger = logging.getLogger('utils.py')
 logger.setLevel(logging.DEBUG)
-handler = logging.handlers.RotatingFileHandler(LOG_DIR+'/MKAQX_India.log', maxBytes=104857600, backupCount=5)
+handler = logging.handlers.RotatingFileHandler(LOG_DIR+'/AQX_India.log', maxBytes=104857600, backupCount=5)
 logger.addHandler(handler)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)

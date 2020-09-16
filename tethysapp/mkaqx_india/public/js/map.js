@@ -1,5 +1,5 @@
 /*****************************************************************************
- * FILE:    MKAQX_INDIA MAP JS
+ * FILE:    AQX_INDIA MAP JS
  * DATE:    28 February 2019
  * AUTHOR: Sarva Pulla
  * MODIFIED BY: Githika Tondapu
@@ -328,21 +328,21 @@ var LIBRARY_OBJECT = (function () {
             for (var i = 0; i < stations.length; ++i) {
                 if (stations[i].pm25 > 90) {
                     myIcon = L.icon({
-                        iconUrl: '/static/mkaqx_india/images/rr.png',
+                        iconUrl: '/static/aqx_india/images/rr.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -50]
                     });
                 } else if (stations[i].pm25 > 50 && stations[i].pm25 < 91) {
                     myIcon = L.icon({
-                        iconUrl: '/static/mkaqx_india/images/oo.png',
+                        iconUrl: '/static/aqx_india/images/oo.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -18]
                     });
                 } else if (stations[i].pm25 > 37 && stations[i].pm25 < 51) {
                     myIcon = L.icon({
-                        iconUrl: '/static/mkaqx_india/images/yy.png',
+                        iconUrl: '/static/aqx_india/images/yy.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
@@ -350,14 +350,14 @@ var LIBRARY_OBJECT = (function () {
 
                 } else if (stations[i].pm25 > 25 && stations[i].pm25 < 38) {
                     myIcon = L.icon({
-                        iconUrl: '/static/mkaqx_india/images/gg.png',
+                        iconUrl: '/static/aqx_india/images/gg.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
                 } else if (stations[i].pm25 >= 0 && stations[i].pm25 < 26) {
                     myIcon = L.icon({
-                        iconUrl: '/static/mkaqx_india/images/bb.png',
+                        iconUrl: '/static/aqx_india/images/bb.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]

@@ -1,7 +1,7 @@
 """Controller Module"""
 import json
 from django.shortcuts import render
-from tethysapp.mkaqx_india.config import THREDDS_wms
+from tethysapp.aqx_india.config import THREDDS_wms
 from .utils import generate_variables_meta, get_styles, gen_thredds_options, get_station_data
 
 def home(request):
@@ -22,4 +22,4 @@ def home(request):
         'stations':json.dumps(stations)
     }
 
-    return render(request, 'mkaqx_india/home.html', context)
+    return render(request, 'aqx_india/home.html', context)

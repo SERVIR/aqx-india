@@ -1,17 +1,17 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 
-class MkaqxIndia(TethysAppBase):
+class AqxIndia(TethysAppBase):
     """
     Tethys app class for Mekong Air Quality Explorer.
     """
 
     name = 'Air Quality Explorer - Beta Version'
-    index = 'mkaqx_india:home'
-    icon = 'mkaqx_india/images/logo.png'
-    package = 'mkaqx_india'
-    root_url = 'mkaqx_india'
+    index = 'aqx_india:home'
+    icon = 'aqx_india/images/logo.png'
+    package = 'aqx_india'
+    root_url = 'aqx_india'
     color = '#000080'
-    description = 'View Air Quality and Fire data in in the Mekong region'
+    description = 'View Air Quality and Fire data'
     tags = 'Air Quality'
     enable_feedback = False
     feedback_emails = []
@@ -25,33 +25,33 @@ class MkaqxIndia(TethysAppBase):
         url_maps = (
             UrlMap(
                 name='home',
-                url='mkaqx_india',
-                controller='mkaqx_india.controllers.home'
+                url='aqx_india',
+                controller='aqx_india.controllers.home'
             ),
             UrlMap(
                 name='get-ts',
-                url='mkaqx_india/get-ts',
-                controller='mkaqx_india.ajax_controllers.get_ts'
+                url='qx_india/get-ts',
+                controller='aqx_india.ajax_controllers.get_ts'
             ),
             UrlMap(
                 name='gen-legend',
-                url='mkaqx_india/gen-legend',
-                controller='mkaqx_india.ajax_controllers.gen_legend'
+                url='aqx_india/gen-legend',
+                controller='aqx_india.ajax_controllers.gen_legend'
             ),
             UrlMap(
                 name='gen-style',
-                url='mkaqx_india/gen-style',
-                controller='mkaqx_india.ajax_controllers.gen_style'
+                url='aqx_india/gen-style',
+                controller='aqx_india.ajax_controllers.gen_style'
             ),
             UrlMap(
                 name='gen-times',
-                url='mkaqx_india/get-times',
-                controller='mkaqx_india.ajax_controllers.get_times'
+                url='aqx_india/get-times',
+                controller='aqx_india.ajax_controllers.get_times'
             ),
             UrlMap(
                 name='gen-gif',
-                url='mkaqx_india/gen-gif',
-                controller='mkaqx_india.ajax_controllers.gen_gif'
+                url='aqx_india/gen-gif',
+                controller='aqx_india.ajax_controllers.gen_gif'
             ),
         )
 
