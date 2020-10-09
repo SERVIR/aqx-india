@@ -2,7 +2,7 @@
 import json
 from django.shortcuts import render
 from tethysapp.aqx_india.config import THREDDS_wms
-from tethysapp.aqx_india.utils import generate_variables_meta, get_styles, gen_thredds_options, get_station_data
+from .utils import generate_variables_meta, get_styles, gen_thredds_options, get_station_data
 
 def home(request):
     """
@@ -23,3 +23,4 @@ def home(request):
     }
 
     return render(request, 'aqx_india/home.html', context)
+

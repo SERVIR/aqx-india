@@ -46,10 +46,11 @@ def get_ts(request):
             return_obj["error"] = "Error processing request: "+ str(e)
     if interaction == 'Station':
         try:
+            """" splitting the location, lat, lon: location has a comma in it """
             x=geom_data.split(',')
-            station = x[0]
-            lat = x[1]
-            lon = x[2]
+            station = x[0] + ',' + x[1]
+            lat = x[2]
+            lon = x[3]
             graph = get_pm25_data(variable, platform, run_date, station, lat, lon)
             if len(graph)>0:
                 return_obj["data"] = graph

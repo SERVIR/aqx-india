@@ -461,34 +461,35 @@ def get_poylgon_values(s_var, geom_data, freq, run_type, run_date):
 
 def get_station_data():
     try:
+        print("Getting ready to connect db")
         conn = psycopg2.connect(
             "dbname={0} user={1} host={2} password={3}".format(cfg.connection['dbname'], cfg.connection['user'], cfg.connection['host'],
                                                                cfg.connection['password']))
         cur = conn.cursor()
-        sql = """SELECT  DISTINCT ON (s.station_id) s.station_id,s.rid,s.name_en, s.lat, s."long" as longitude,m.pm25,m.datetime
-                    FROM    stations s
-                    JOIN    nrt_measurements m
-                    ON      m.station_id = s.station_id and m.pm25 is not null
-                    ORDER BY s.station_id, m.datetime DESC"""
+        print("Getting ready to query db")
+        sql = """SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local
+                    FROM    testindia s
+                    WHERE   parameter='pm25'
+              """
         cur.execute(sql)
+        print("out from query")
         data = cur.fetchall()
         stations=[]
         for row in data:
-            rid = row[1]
-            name = row[2]
-            station_id = row[0]
-            lat = row[3]
-            lon = row[4]
-            pm25 = row[5]
-            latest_date = row[6]
+            location = row[0]
+            print("lcation ",location)
+            parameter = row[1]
+            latitude = row[2]
+            longitude = row[3]
+            pm25 = row[4]
+            local = row[5]
             stations.append({
-                'rid': rid,
-                'station_id': station_id,
-                'latest_date': str(latest_date),
-                'lon': lon,
-                'lat': lat,
+                'location': location,
+                'parameter': parameter,
+                'latitude': latitude,
+                'longitude': longitude,
                 'pm25': pm25,
-                'name': name
+                'local': local
             })
         conn.close()
         return stations
@@ -499,27 +500,49 @@ def get_station_data():
 def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
     try:
         geom_data = lon+',' + lat
+        print("getting ready to get pt values")
         geos_pm25_data = get_pt_values(s_var, geom_data, "station", "geos", run_date)
+        print("pt values returned")
         conn = psycopg2.connect(
             "dbname={0} user={1} host={2} password={3}".format(cfg.connection['dbname'], cfg.connection['user'],
                                                                cfg.connection['host'], cfg.connection['password']))
         cur = conn.cursor()
+        print("connected to db")
         # "2019-08-01 03:00:00"
+        #print("run_date is ", run_date)
+        #print(run_date.split('.')[0])
         date_obj = datetime.strptime(run_date.split('.')[0],"%Y%m%d")
         end_date = date_obj+timedelta(days=3)
         sd = date_obj.strftime("%Y-%m-%d %H:%M:%S")
         ed = end_date.strftime("%Y-%m-%d %H:%M:%S")
-        cur.execute(("SELECT  datetime, pm25 from nrt_measurements where station_id = %s and pm25 is not null \
-                      and date_part('hour', datetime) in (2,5,8,11,14,17,20,23) \
-                      and datetime between %s and %s"), (str(station), sd, ed,))
+        print(sd,ed,station)
+        sql="SELECT  local,value from testindia where location = '"+station+"' and value is not null \
+                      and substring(local,12,2)  in ('02','05','08','11','14','17','20','23') \
+                      and substring(local,1,19)  between '"+sd+"' and '" +ed+"' "
+        print(sql)
+        
+        cur.execute(sql)
+        '''              
+        cur.execute(("SELECT  local,value from testindia where location = '%s' and value is not null \
+                      and substring(local,12,2)  in ('02','05','08','11','14','17','20','23') \
+                      and substring(local,1,19)  between '%s' and '%s'"), (str(station), sd, ed,))   # station is location,ed=end date,sd=start date
+        '''
         data = cur.fetchall()
         pm25_data = {}
         ts_plot = []
+        print("getting into for loop 519")
         for row in data:
-            dt = row[0]
+            dt = row[0][0:19]
+            print(dt)
             pm25 = row[1]
-            time_stamp = calendar.timegm(dt.timetuple()) * 1000
+            dtts=datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
+            print(dtts)
+            time_stamp = calendar.timegm(dtts.timetuple()) * 1000
+            print(time_stamp)
             ts_plot.append([time_stamp, float(str(pm25))])
+            print(ts_plot)
+            
+        print("after the loop 525")
 
         ts_plot.sort()
         pm25_data["field_data"] = ts_plot

@@ -92,6 +92,7 @@ var LIBRARY_OBJECT = (function () {
         thredds_options = JSON.parse(thredds_options);
         stations = $meta_element.attr('data-stations');
         stations = JSON.parse(stations);
+        console.log(stations);
     };
 
     init_dropdown = function () {
@@ -133,7 +134,8 @@ var LIBRARY_OBJECT = (function () {
         map = L.map('map', {
             // timeDimension: true,
             // timeDimensionControl: true
-        }).setView([15.8700, 100.9925], 6);
+        // }).setView([15.8700, 100.9925], 6); This is for Thailand
+        }).setView([23.006, 77.725], 5);
 
         legend = L.control({
             position: 'bottomleft'
@@ -371,14 +373,14 @@ var LIBRARY_OBJECT = (function () {
                     //     color: color
                     // });
 
-                    L.marker([stations[i].lat, stations[i].lon], {
+                    L.marker([stations[i].latitude, stations[i].longitude], {
                         icon: myIcon
                     });
-                oneMarker.bindTooltip("<b>Station:</b> " + stations[i].name + "<br>Field data for " + stations[i].latest_date + "<br> (<i>All dates and times are in Bangkok time</i>)");
-                oneMarker.name = stations[i].station_id;
-                oneMarker.fullname = stations[i].name;
-                oneMarker.lat = stations[i].lat;
-                oneMarker.lon = stations[i].lon;
+                oneMarker.bindTooltip("<b>Station:</b> " + stations[i].location + "<br>Field data for " + (stations[i].local).substring(0,19) + "<br> (<i>All dates and times are in Indian Std. Time</i>)");
+                oneMarker.name = stations[i].location;
+                oneMarker.fullname = stations[i].location;
+                oneMarker.lat = stations[i].latitude;
+                oneMarker.lon = stations[i].longitude;
                 oneMarker.addTo(markersLayer);
             }
             markersLayer.on("click", markerOnClick);
@@ -990,7 +992,7 @@ var LIBRARY_OBJECT = (function () {
                 if (interaction == "Station") {
 
                     var values = result.data["field_data"];
-                    var forecast_values = result.data["bc_mlpm25"];
+                    var forecast_values = result.data["geospm25"];
                     var firstday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + rd_type.substring(6, 8);
                     var d1 = new Date(firstday);
                     var date1 = d1.toISOString().split('T')[0];
@@ -1098,8 +1100,8 @@ var LIBRARY_OBJECT = (function () {
                             color: "blue"
                         },
                         {
-                            data: result.data["bc_mlpm25"],
-                            name: "BC MLPM25 data",//
+                            data: result.data["geospm25"],
+                            name: "GEOS PM25 data",//
                             color: "green"
                         },
                           // {
@@ -1170,7 +1172,7 @@ var LIBRARY_OBJECT = (function () {
                         zoomType: 'x',
                         events: {
                             load: function () {
-                                var label = this.renderer.label($("#run_table option:selected").val()=="geos"?"Graph dates and times are in Bangkok time":"Graph dates and times are in UTC time")
+                                var label = this.renderer.label($("#run_table option:selected").val()=="geos"?"Graph dates and times are in Indian Std. Time":"Graph dates and times are in UTC time")
                                     .css({
                                         width: '400px',
                                         fontSize: '12px'
@@ -1729,7 +1731,7 @@ var LIBRARY_OBJECT = (function () {
             date_arr_sorted.forEach(function (item, i) {
 
                 var opt = item.split('/').reverse()[0];
-                var newdate = opt.substring(0, 4) + '-' + opt.substring(4, 6) + '-' + opt.substring(6, 8)+" 07:00:00";
+                var newdate = opt.substring(0, 4) + '-' + opt.substring(4, 6) + '-' + opt.substring(6, 8)+" 05:30:00";
                 if (run_type == "geos") {
                     var new_option2 = new Option(newdate, item);
 
@@ -1748,7 +1750,7 @@ var LIBRARY_OBJECT = (function () {
                     var value = item["display_name"];
                     var new_option = new Option(value, item["id"]);
                     $("#var_table").append(new_option);
-                      if (item["id"].toUpperCase() == "BC_MLPM25") {
+                      if (item["id"].toUpperCase() == "GEOSPM25") {
                     new_option.selected = true;
                 }
                 }

@@ -30,7 +30,7 @@ class AqxIndia(TethysAppBase):
             ),
             UrlMap(
                 name='get-ts',
-                url='qx_india/get-ts',
+                url='aqx_india/get-ts',
                 controller='aqx_india.ajax_controllers.get_ts'
             ),
             UrlMap(
