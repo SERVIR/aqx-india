@@ -313,7 +313,8 @@ def get_pt_values(s_var, geom_data, freq, run_type, run_date):
                 if np.isnan(val) == False:
                     dt_str = netCDF4.num2date(lis_var['time'][timestep], units=lis_var['time'].units,
                                               calendar=lis_var['time'].calendar)
-                    test=dt_str+timedelta(hours=7)
+                    test=dt_str+timedelta(hours=5)  # adding local time hours
+                    test=test+timedelta(minutes=30)  #  local min
                     dtt = test.strftime('%Y-%m-%dT%H:%M:%SZ')
                     dt = datetime.strptime(dtt, '%Y-%m-%dT%H:%M:%SZ')
                     time_stamp = calendar.timegm(dt.timetuple()) * 1000
@@ -414,7 +415,8 @@ def get_poylgon_values(s_var, geom_data, freq, run_type, run_date):
             if np.isnan(val) == False:
                 dt_str = netCDF4.num2date(lis_var['time'][timestep], units=lis_var['time'].units,
                                           calendar=lis_var['time'].calendar)
-                test = dt_str + timedelta(hours=7)
+                test = dt_str + timedelta(hours=5)  # local time hour
+                test=test+timedelta(minutes=30)   #local time min
                 dtt = test.strftime('%Y-%m-%dT%H:%M:%SZ')
                 dt = datetime.strptime(dtt, '%Y-%m-%dT%H:%M:%SZ')
                 time_stamp = calendar.timegm(dt.timetuple()) * 1000

@@ -300,16 +300,17 @@ var LIBRARY_OBJECT = (function () {
         var pm25_legend = L.control({position: 'bottomright'});
         pm25_legend.onAdd = function (map) {
             function getColor(d) {
-                return d === '0-25' ? "#6ef0ff" :
-                    d === '26-37' ? "#24cf1b" :
-                        d === '38-50' ? "#eff213" :
-                            d === '51-90' ? "#eda702" :
-                                "#ed1e02";
+                return d === '0-30' ? "#0c9a50" :
+                    d === '30-60' ? "#8fc24f" :
+                        d === '60-90' ? "#ffbb0c" :
+                            d === '90-120' ? "#ff9c0b" :
+                              d === '120-250 ? "#ff1c12" :
+                                "#d1250e";
             }
 
             var div = L.DomUtil.create('div', 'info pm25_legend');
             var labels = ['<strong>PM2.5(&micro;gm<sup>-3</sup>)</strong>'];
-            var categories = ['0-25', '26-37', '38-50', '51-90', '91 and up'];
+            var categories = ['0-30', '30-60', '60-90', '90-120', '120-250', '251 and up'];
 
             for (var i = 0; i < categories.length; i++) {
 
@@ -328,21 +329,21 @@ var LIBRARY_OBJECT = (function () {
         }
             else {
             for (var i = 0; i < stations.length; ++i) {
-                if (stations[i].pm25 > 90) {
+                if (stations[i].pm25 > 250) {
                     myIcon = L.icon({
                         iconUrl: '/static/aqx_india/images/rr.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -50]
                     });
-                } else if (stations[i].pm25 > 50 && stations[i].pm25 < 91) {
+                } else if (stations[i].pm25 > 120 && stations[i].pm25 < 250) {
                     myIcon = L.icon({
                         iconUrl: '/static/aqx_india/images/oo.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -18]
                     });
-                } else if (stations[i].pm25 > 37 && stations[i].pm25 < 51) {
+                } else if (stations[i].pm25 > 90 && stations[i].pm25 < 120) {
                     myIcon = L.icon({
                         iconUrl: '/static/aqx_india/images/yy.png',
                         iconSize: [32, 32],
@@ -350,14 +351,21 @@ var LIBRARY_OBJECT = (function () {
                         popupAnchor: [0, -14]
                     });
 
-                } else if (stations[i].pm25 > 25 && stations[i].pm25 < 38) {
+                } else if (stations[i].pm25 > 60 && stations[i].pm25 < 90) {
                     myIcon = L.icon({
                         iconUrl: '/static/aqx_india/images/gg.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
-                } else if (stations[i].pm25 >= 0 && stations[i].pm25 < 26) {
+                } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
+                    myIcon = L.icon({
+                        iconUrl: '/static/aqx_india/images/bb.png',
+                        iconSize: [32, 32],
+                        iconAnchor: [9, 21],
+                        popupAnchor: [0, -14]
+                    });
+                } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
                     myIcon = L.icon({
                         iconUrl: '/static/aqx_india/images/bb.png',
                         iconSize: [32, 32],
@@ -365,6 +373,7 @@ var LIBRARY_OBJECT = (function () {
                         popupAnchor: [0, -14]
                     });
                 }
+                
                 var oneMarker =
                     //
                     //     [stations[i].lat,stations[i].lon],
