@@ -2,10 +2,10 @@ from tethys_sdk.base import TethysAppBase, url_map_maker
 
 class AqxIndia(TethysAppBase):
     """
-    Tethys app class for Mekong Air Quality Explorer.
+    Tethys app class for India Air Quality Explorer.
     """
 
-    name = 'Air Quality Explorer - Beta Version'
+    name = 'India Air Quality Explorer - Beta Version'
     index = 'aqx_india:home'
     icon = 'aqx_india/images/logo.png'
     package = 'aqx_india'

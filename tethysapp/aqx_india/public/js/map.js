@@ -304,7 +304,7 @@ var LIBRARY_OBJECT = (function () {
                     d === '30-60' ? "#8fc24f" :
                         d === '60-90' ? "#ffbb0c" :
                             d === '90-120' ? "#ff9c0b" :
-                              d === '120-250 ? "#ff1c12" :
+                              d === '120-250' ? "#ff1c12" :
                                 "#d1250e";
             }
 
@@ -331,21 +331,21 @@ var LIBRARY_OBJECT = (function () {
             for (var i = 0; i < stations.length; ++i) {
                 if (stations[i].pm25 > 250) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/rr.png',
+                        iconUrl: '/static/aqx_india/images/one.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -50]
                     });
                 } else if (stations[i].pm25 > 120 && stations[i].pm25 < 250) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/oo.png',
+                        iconUrl: '/static/aqx_india/images/two.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -18]
                     });
                 } else if (stations[i].pm25 > 90 && stations[i].pm25 < 120) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/yy.png',
+                        iconUrl: '/static/aqx_india/images/three.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
@@ -353,21 +353,21 @@ var LIBRARY_OBJECT = (function () {
 
                 } else if (stations[i].pm25 > 60 && stations[i].pm25 < 90) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/gg.png',
+                        iconUrl: '/static/aqx_india/images/four.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
                 } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/bb.png',
+                        iconUrl: '/static/aqx_india/images/five.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
                 } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/bb.png',
+                        iconUrl: '/static/aqx_india/images/six.png',
                         iconSize: [32, 32],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
@@ -791,7 +791,8 @@ var LIBRARY_OBJECT = (function () {
         if(time!="") {
            var d = new Date(time);
 
-            d.setHours(d.getHours() - 7);
+            d.setHours(d.getHours() - 5);
+            d.setMinutes(d.getMinutes() - 30);
             time = d.toISOString();
         }
         var wmsLayer = L.tileLayer.wms(wmsUrl, {
@@ -868,7 +869,8 @@ var LIBRARY_OBJECT = (function () {
                     "background-color": "#66CCFF #FFCCFF",
                     "border-color": "none"
                 },
-                labels: ['0', '', '', '', '12', '', '', '', '24', '', '', '', '36', '', '', '', '48', '', '', '', '60', '', '', '', '72', '', '', '', '84', '', '', '', '', 'Max'],
+                //gauge interval colors to match legend in pm25
+                labels: ['0', '', '', '', '20', '', '', '', '40', '', '', '', '60', '', '', '', '80', '', '', '', '100', '', '', '', '120', '', '', '','140', '', '', '','160', '', '', '','Max'],
                 item: {  //Scale Label Styling
                     "font-color": "black",
                     "font-family": "Arial",
@@ -883,31 +885,35 @@ var LIBRARY_OBJECT = (function () {
                     "size": 20,
                     "rules": [
                         {
-                            "rule": "%v >= 0 && %v < 25",
-                            "background-color": "#6ef0ff"
+                            "rule": "%v >= 0 && %v < 30",
+                            "background-color": "#0c9a50"
                         },
                         {
-                            "rule": "%v >= 25 && %v < 37",
-                            "background-color": "#24cf1b"
+                            "rule": "%v >= 30 && %v < 60",
+                            "background-color": "#8fc24f"
                         },
                         {
-                            "rule": "%v >= 37 && %v < 50",
-                            "background-color": "#eff213"
+                            "rule": "%v >= 60 && %v < 90",
+                            "background-color": "#ffbb0c"
                         },
                         {
-                            "rule": "%v >= 50 && %v < 90",
-                            "background-color": "#eda702"
+                            "rule": "%v >= 90 && %v < 120",
+                            "background-color": "#ff9c0b"
                         },
                         {
-                            "rule": "%v >= 90",
-                            "background-color": "#ed1e02"
+                            "rule": "%v >= 120 && %v < 250",
+                            "background-color": "#ff1c12"
+                        },
+                        {
+                            "rule": "%v >= 251",
+                            "background-color": "#d1250e"
                         }
                     ]
                 }
             },
             series: [
                 {
-                    values: [Math.round(field_val) >= 99 ? 99 : Math.round(field_val)], // starting value
+                    values: [Math.round(field_val) >= 300 ? 300 : Math.round(field_val)], // starting value
                     // backgroundColor: 'black',
                     // indicator: [5, 5, 5, 5, 0.75],
                     animation: {
@@ -931,7 +937,7 @@ var LIBRARY_OBJECT = (function () {
                     },
                     csize: "7%",
                     size: "90%",
-                    'background-color': "green",
+                    'background-color': "black",
                     text: "PM2.5 Forecast"
                 }
 
@@ -996,12 +1002,14 @@ var LIBRARY_OBJECT = (function () {
 
         //  var secondday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + (((parseInt(rd_type.substring(6, 8)) + 1).toString().length < 2) ? ('0' + (parseInt(rd_type.substring(6, 8)) + 1)) : (parseInt(rd_type.substring(6, 8)) + 1));
         //   var thirdday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + (((parseInt(rd_type.substring(6, 8)) + 2).toString().length < 2) ? ('0' + (parseInt(rd_type.substring(6, 8)) + 2)) : (parseInt(rd_type.substring(6, 8)) + 2));
+      
         xhr.done(function (result) {
             if ("success" in result) {
+              
                 if (interaction == "Station") {
 
                     var values = result.data["field_data"];
-                    var forecast_values = result.data["geospm25"];
+                    var forecast_values = result.data["geos_pm25"];
                     var firstday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + rd_type.substring(6, 8);
                     var d1 = new Date(firstday);
                     var date1 = d1.toISOString().split('T')[0];
@@ -1017,6 +1025,7 @@ var LIBRARY_OBJECT = (function () {
                     document.getElementById("day2_guage").innerHTML = secondday;
                     document.getElementById("day3_guage").innerHTML = thirdday;
 
+                  
                     //     populateValues(values);
                     field_day1_avg = 0
                     field_day2_avg = 0;
@@ -1064,15 +1073,17 @@ var LIBRARY_OBJECT = (function () {
                     //console.log("station");
                     gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
                     document.getElementById("datevalue").innerHTML = document.getElementById("day1_guage").innerHTML;
-                      document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 08:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 23:30";
+                      document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 07:00";
+            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 22:00";
                     $("#day1_guage").css("background-color", "black");
                     $("#day1_guage").css("color", "white");
                     $("#day2_guage").css("background-color", "gray");
                     $("#day2_guage").css("color", "white");
                     $("#day3_guage").css("background-color", "gray");
                     $("#day3_guage").css("color", "white");
+                  
                 }
+                
 
                 var arr = [];
                 var title = "";
@@ -1082,7 +1093,7 @@ var LIBRARY_OBJECT = (function () {
                 if (units == 'mcgm-3') {
                     units = '&micro;gm<sup>-3</sup>';
                 }
-
+                
                 if (interaction == "Station") {
                     document.getElementsByClassName("forpm25")[0].style.display = 'table';
                     document.getElementsByClassName("forpm25")[1].style.display = 'table';
@@ -1093,6 +1104,7 @@ var LIBRARY_OBJECT = (function () {
                     document.getElementById("modalchart").style.display = "flex";
                     document.getElementById("modalchart").style.alignItems = "center";
                     document.getElementById("modalchart").style.justifyContent = "center";
+                    console.log(result.data["field_data"]);
                     serieses = [
                         // {
                         //     data: result.data["ml_pm25"],
@@ -1109,9 +1121,9 @@ var LIBRARY_OBJECT = (function () {
                             color: "blue"
                         },
                         {
-                            data: result.data["geospm25"],
+                            data: result.data["geos_pm25"],
                             name: "GEOS PM25 data",//
-                            color: "green"
+                            color: "black"
                         },
                           // {
                           //      data: result.data["geos_pm25"],
@@ -1144,29 +1156,34 @@ var LIBRARY_OBJECT = (function () {
                 if (interaction == "Station") {
 
                     arr = [{
-                        color: "#6ef0ff",
+                        color: "#0c9a50",
                         from: 0,
-                        to: 25
+                        to: 30
                     },
                         {
-                            color: "#24cf1b",
-                            from: 25,
-                            to: 37
+                            color: "#8fc24f",
+                            from: 30,
+                            to: 60
                         },
                         {
-                            color: "#eff213",
-                            from: 37,
-                            to: 50
-                        },
-                        {
-                            color: "#eda702",
-                            from: 50,
+                            color: "#ffbb0c",
+                            from: 60,
                             to: 90
                         },
                         {
-                            color: "#ed1e02",
+                            color: "#ff9c0b",
                             from: 90,
-                            to: 200
+                            to: 120
+                        },
+                        {
+                            color: "#ff1c12",
+                            from: 120,
+                            to: 250
+                        },
+                        {
+                            color: "#d1250e",
+                            from: 251,
+                            to: 400
                         }];
                     title = "PM2.5 values at " + titleforst;
 
@@ -1716,7 +1733,9 @@ var LIBRARY_OBJECT = (function () {
                       $("#hour_table").html('');
                     times.forEach(function (time, i) {
                         var date= new Date(time);
-                        date.setHours(date.getHours() + 7 );
+                        date.setHours(date.getHours() + 5);
+                        date.setMinutes(date.getMinutes() + 30);
+                        
                         var opt = new Option(date.toISOString().substring(0, 10)+' '+date.toISOString().substring(11,19), date.toISOString());
                         $("#hour_table").append(opt);
                     });
@@ -1788,7 +1807,7 @@ var LIBRARY_OBJECT = (function () {
                 update_style(style);
                 var rmin = $("#range-min").val();
                 var rmax = $("#range-max").val();
-                add_wms(run_type, freq, rd_type, var_type, rmin, rmax, style, datestr + 'T08:30:00Z');
+                add_wms(run_type, freq, rd_type, var_type, rmin, rmax, style, datestr + 'T07:00:00Z');
 
   $("#hour_table").html('');
          get_times(rd_type);
@@ -1917,8 +1936,8 @@ var LIBRARY_OBJECT = (function () {
         $("#day1_guage").click(function () {
             gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
             document.getElementById("datevalue").innerHTML = document.getElementById("day1_guage").innerHTML;
-            document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 08:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 23:30";
+            document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 07:00";
+            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 22:00";
             $(this).css("background-color", "black");
             $("#day2_guage").css("background-color", "gray");
             $("#day3_guage").css("background-color", "gray");
@@ -1926,8 +1945,8 @@ var LIBRARY_OBJECT = (function () {
         $("#day2_guage").click(function () {
             gen_chart(field_day2_avg < 0 ? -1 : field_day2_avg, forecast_day2_avg < 0 ? -1 : forecast_day2_avg);
             document.getElementById("datevalue").innerHTML = document.getElementById("day2_guage").innerHTML;
-              document.getElementById("fromd").innerHTML = document.getElementById("day2_guage").innerHTML+" 02:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day2_guage").innerHTML+" 23:30";
+              document.getElementById("fromd").innerHTML = document.getElementById("day2_guage").innerHTML+" 01:00";
+            document.getElementById("tod").innerHTML = document.getElementById("day2_guage").innerHTML+" 22:00";
             $(this).css("background-color", "black");
             $("#day1_guage").css("background-color", "gray");
             $("#day3_guage").css("background-color", "gray");
@@ -1935,8 +1954,8 @@ var LIBRARY_OBJECT = (function () {
         $("#day3_guage").click(function () {
             gen_chart(field_day3_avg < 0 ? -1 : field_day3_avg, forecast_day3_avg < 0 ? -1 : forecast_day3_avg);
             document.getElementById("datevalue").innerHTML = document.getElementById("day3_guage").innerHTML;
-              document.getElementById("fromd").innerHTML = document.getElementById("day3_guage").innerHTML+" 02:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day3_guage").innerHTML+" 23:30";
+              document.getElementById("fromd").innerHTML = document.getElementById("day3_guage").innerHTML+" 01:00";
+            document.getElementById("tod").innerHTML = document.getElementById("day3_guage").innerHTML+" 22:00";
             $(this).css("background-color", "black");
             $("#day2_guage").css("background-color", "gray");
             $("#day1_guage").css("background-color", "gray");

@@ -517,8 +517,9 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
         end_date = date_obj+timedelta(days=3)
         sd = date_obj.strftime("%Y-%m-%d %H:%M:%S")
         ed = end_date.strftime("%Y-%m-%d %H:%M:%S")
-        print(sd,ed,station)
+       
         sql="SELECT  local,value from testindia where location = '"+station+"' and value is not null \
+                      and parameter='pm25' \
                       and substring(local,12,2)  in ('02','05','08','11','14','17','20','23') \
                       and substring(local,1,19)  between '"+sd+"' and '" +ed+"' "
         print(sql)
@@ -535,21 +536,22 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
         print("getting into for loop 519")
         for row in data:
             dt = row[0][0:19]
-            print(dt)
+           
             pm25 = row[1]
+            print("this is pm25 ", pm25)
             dtts=datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S')
-            print(dtts)
-            time_stamp = calendar.timegm(dtts.timetuple()) * 1000
-            print(time_stamp)
-            ts_plot.append([time_stamp, float(str(pm25))])
-            print(ts_plot)
             
-        print("after the loop 525")
-
+            time_stamp = calendar.timegm(dtts.timetuple()) * 1000
+            
+            ts_plot.append([time_stamp, float(str(pm25))])
+            
+            
+        
         ts_plot.sort()
         pm25_data["field_data"] = ts_plot
         pm25_data["ml_pm25"] = geos_pm25_data["ml_pm25"]
         pm25_data["bc_mlpm25"] = geos_pm25_data["bc_mlpm25"]
+        
         pm25_data["geos_pm25"] = geos_pm25_data["geos_pm25"]
         pm25_data["geom"] = geos_pm25_data["geom"]
         conn.close()

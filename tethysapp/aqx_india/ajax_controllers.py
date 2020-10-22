@@ -54,6 +54,7 @@ def get_ts(request):
             graph = get_pm25_data(variable, platform, run_date, station, lat, lon)
             if len(graph)>0:
                 return_obj["data"] = graph
+                print(return_obj["data"])
                 return_obj["success"] = "success"
             else:
                 return_obj["error"] = "Error processing request: " + str(e)
