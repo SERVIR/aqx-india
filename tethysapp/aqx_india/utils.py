@@ -56,6 +56,7 @@ def generate_variables_meta():
             units = linevals[3]
             vmin = linevals[4]
             vmax = linevals[5]
+    
 
             try:
                 variable_list.append({
@@ -68,6 +69,7 @@ def generate_variables_meta():
                 })
             except Exception:
                 continue
+    print('vmax =',vmax)
     return variable_list
 
 
@@ -90,7 +92,7 @@ def get_styles():
         ('ALG 2', 'alg2'),
         ('Ferret', 'ferret'),
         ('Reflectivity', 'enspmm-refc'),
-        ('PM25', 'pm25'),
+        ('PM25', 'pm25_india'),
         ('PM25 RAMP', 'pm25ramp'),
         # ('Probability', 'prob'),
         # ('White-Blue', whiteblue'),

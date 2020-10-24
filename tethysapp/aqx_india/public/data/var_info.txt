@@ -35,6 +35,4 @@ SO4SMASS|geos|SO4 Surface Mass Concentration|mcgm-3|0|10
 SSSMASS25|geos|SS Surface Mass Concentration|mcgm-3|0|30
 T10M|geos|10-meter_air_temperature|Kelvin|270|302
 WIND|geos|Wind|ms-1|0|15
-BC_MLPM25|geos|BC_MLPM25|mcgm-3|0|100
-PM25|geos|PM25|mcgm-3|0|100
-GEOSPM25|geos|GEOSPM25|mcgm-3|0|100
+GEOSPM25|geos|GEOSPM25|mcgm-3|0|300

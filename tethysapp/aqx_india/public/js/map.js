@@ -331,44 +331,44 @@ var LIBRARY_OBJECT = (function () {
             for (var i = 0; i < stations.length; ++i) {
                 if (stations[i].pm25 > 250) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/one.png',
-                        iconSize: [32, 32],
+                        iconUrl: '/static/aqx_india/images/six.png',
+                        iconSize: [16, 16],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -50]
                     });
                 } else if (stations[i].pm25 > 120 && stations[i].pm25 < 250) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/two.png',
-                        iconSize: [32, 32],
+                        iconUrl: '/static/aqx_india/images/five.png',
+                        iconSize: [16, 16],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -18]
                     });
                 } else if (stations[i].pm25 > 90 && stations[i].pm25 < 120) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/three.png',
-                        iconSize: [32, 32],
+                        iconUrl: '/static/aqx_india/images/four.png',
+                        iconSize: [16, 16],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
 
                 } else if (stations[i].pm25 > 60 && stations[i].pm25 < 90) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/four.png',
-                        iconSize: [32, 32],
+                        iconUrl: '/static/aqx_india/images/three.png',
+                        iconSize: [16, 16],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
                 } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/five.png',
-                        iconSize: [32, 32],
+                        iconUrl: '/static/aqx_india/images/two.png',
+                        iconSize: [16, 16],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
                 } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
                     myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/six.png',
-                        iconSize: [32, 32],
+                        iconUrl: '/static/aqx_india/images/one.png',
+                        iconSize: [16, 16],
                         iconAnchor: [9, 21],
                         popupAnchor: [0, -14]
                     });
@@ -870,7 +870,8 @@ var LIBRARY_OBJECT = (function () {
                     "border-color": "none"
                 },
                 //gauge interval colors to match legend in pm25
-                labels: ['0', '', '', '', '20', '', '', '', '40', '', '', '', '60', '', '', '', '80', '', '', '', '100', '', '', '', '120', '', '', '','140', '', '', '','160', '', '', '','Max'],
+                //labels: ['0', '', '', '', '20', '', '', '', '40', '', '', '', '60', '', '', '', '80', '', '', '', '100', '', '', '', '120', '', '', '','140', '', '', '','160', '', '', '','Max'],
+                labels: ['0','','',  '150', '','', '250', 'Max'],
                 item: {  //Scale Label Styling
                     "font-color": "black",
                     "font-family": "Arial",
@@ -1838,6 +1839,8 @@ var LIBRARY_OBJECT = (function () {
             var var_type = ($("#var_table option:selected").val());
             var index = find_var_index(var_type, var_options);
             $("#range-min").val(var_options[index]["min"]);
+            console.log(var_type);
+            console.log(var_options[index]);
             $("#range-max").val(var_options[index]["max"]);
             $("#style_table").trigger('change');
             if (typeof int_type !== 'undefined') {
