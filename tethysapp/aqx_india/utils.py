@@ -467,8 +467,8 @@ def get_station_data():
     try:
         print("Getting ready to connect db")
         conn = psycopg2.connect(
-            "dbname={0} user={1} host={2} password={3}".format(cfg.connection['dbname'], cfg.connection['user'], cfg.connection['host'],
-                                                               cfg.connection['password']))
+            "dbname={0} user={1} host={2} password={3} port={4}".format(cfg.connection['dbname'], cfg.connection['user'], cfg.connection['host'],
+                                                               cfg.connection['password'],cfg.connection['port']))
         cur = conn.cursor()
         print("Getting ready to query db")
         sql = """SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local
@@ -508,8 +508,8 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
         geos_pm25_data = get_pt_values(s_var, geom_data, "station", "geos", run_date)
         print("pt values returned")
         conn = psycopg2.connect(
-            "dbname={0} user={1} host={2} password={3}".format(cfg.connection['dbname'], cfg.connection['user'],
-                                                               cfg.connection['host'], cfg.connection['password']))
+            "dbname={0} user={1} host={2} password={3} port={4}".format(cfg.connection['dbname'], cfg.connection['user'],
+                                                               cfg.connection['host'], cfg.connection['password'],cfg.connection['port']))
         cur = conn.cursor()
         print("connected to db")
         # "2019-08-01 03:00:00"
