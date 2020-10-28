@@ -863,7 +863,7 @@ var LIBRARY_OBJECT = (function () {
             },
             scaleR: {
                 "aperture": 200,
-                "values": "0:99:3",
+                "values": "0:300:3",
                 center: {
                     "size": 10,
                     "background-color": "#66CCFF #FFCCFF",
@@ -871,7 +871,7 @@ var LIBRARY_OBJECT = (function () {
                 },
                 //gauge interval colors to match legend in pm25
                 //labels: ['0', '', '', '', '20', '', '', '', '40', '', '', '', '60', '', '', '', '80', '', '', '', '100', '', '', '', '120', '', '', '','140', '', '', '','160', '', '', '','Max'],
-                labels: ['0','','',  '150', '','', '250', 'Max'],
+                labels: ['0', '', '30',  '', '60',  '', '90',  '', '120', '', '', '','', '250', '', 'Max'],
                 item: {  //Scale Label Styling
                     "font-color": "black",
                     "font-family": "Arial",
