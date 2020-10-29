@@ -53,6 +53,11 @@ class AqxIndia(TethysAppBase):
                 url='aqx_india/gen-gif',
                 controller='aqx_india.ajax_controllers.gen_gif'
             ),
+            UrlMap(
+                name='get-stations',
+                url='aqx_india/get-stations',
+                controller='aqx_india.ajax_controllers.get_stations'
+            ),
         )
 
         return url_maps

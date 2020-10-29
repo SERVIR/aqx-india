@@ -463,7 +463,7 @@ def get_poylgon_values(s_var, geom_data, freq, run_type, run_date):
     return json_obj
 
 
-def get_station_data():
+def get_station_data(init_date):
     try:
         print("Getting ready to connect db")
         conn = psycopg2.connect(
@@ -471,10 +471,8 @@ def get_station_data():
                                                                cfg.connection['password'],cfg.connection['port']))
         cur = conn.cursor()
         print("Getting ready to query db")
-        sql = """SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local
-                    FROM    indiagrounddata s
-                    WHERE   parameter='pm25'
-              """
+        sql = "SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local FROM indiagrounddata s WHERE   parameter='pm25' and local like '"+init_date+"%' "
+        print(sql)
         cur.execute(sql)
         print("out from query")
         data = cur.fetchall()

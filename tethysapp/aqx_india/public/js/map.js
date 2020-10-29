@@ -90,9 +90,8 @@ var LIBRARY_OBJECT = (function () {
         threddss_wms_url = $meta_element.attr('data-wms-url');
         thredds_options = $meta_element.attr('data-thredds-options');
         thredds_options = JSON.parse(thredds_options);
-        stations = $meta_element.attr('data-stations');
-        stations = JSON.parse(stations);
-        console.log(stations);
+
+
     };
 
     init_dropdown = function () {
@@ -295,119 +294,6 @@ var LIBRARY_OBJECT = (function () {
             }
         });
 
-        var myIcon;
-        var markersLayer = L.featureGroup().addTo(map);
-        var pm25_legend = L.control({position: 'bottomright'});
-        pm25_legend.onAdd = function (map) {
-            function getColor(d) {
-                return d === '0-30' ? "#0c9a50" :
-                    d === '30-60' ? "#8fc24f" :
-                        d === '60-90' ? "#ffbb0c" :
-                            d === '90-120' ? "#ff9c0b" :
-                              d === '120-250' ? "#ff1c12" :
-                                "#d1250e";
-            }
-
-            var div = L.DomUtil.create('div', 'info pm25_legend');
-            var labels = ['<strong>PM2.5(&micro;gm<sup>-3</sup>)</strong>'];
-            var categories = ['0-30', '30-60', '60-90', '90-120', '120-250', '251 and up'];
-
-            for (var i = 0; i < categories.length; i++) {
-
-                div.innerHTML +=
-                    labels.push(
-                        '<i class="circle" style="background:' + getColor(categories[i]) + '"></i> ' +
-                        (categories[i] ? categories[i] : '+'));
-
-            }
-            div.innerHTML = labels.join('<br>');
-            return div;
-        };
-        pm25_legend.addTo(map);
-        if(stations[0]=="error"){
-            alert("Could not load stations from database. Please retry later.");
-        }
-            else {
-            for (var i = 0; i < stations.length; ++i) {
-                if (stations[i].pm25 > 250) {
-                    myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/six.png',
-                        iconSize: [16, 16],
-                        iconAnchor: [9, 21],
-                        popupAnchor: [0, -50]
-                    });
-                } else if (stations[i].pm25 > 120 && stations[i].pm25 < 250) {
-                    myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/five.png',
-                        iconSize: [16, 16],
-                        iconAnchor: [9, 21],
-                        popupAnchor: [0, -18]
-                    });
-                } else if (stations[i].pm25 > 90 && stations[i].pm25 < 120) {
-                    myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/four.png',
-                        iconSize: [16, 16],
-                        iconAnchor: [9, 21],
-                        popupAnchor: [0, -14]
-                    });
-
-                } else if (stations[i].pm25 > 60 && stations[i].pm25 < 90) {
-                    myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/three.png',
-                        iconSize: [16, 16],
-                        iconAnchor: [9, 21],
-                        popupAnchor: [0, -14]
-                    });
-                } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
-                    myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/two.png',
-                        iconSize: [16, 16],
-                        iconAnchor: [9, 21],
-                        popupAnchor: [0, -14]
-                    });
-                } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
-                    myIcon = L.icon({
-                        iconUrl: '/static/aqx_india/images/one.png',
-                        iconSize: [16, 16],
-                        iconAnchor: [9, 21],
-                        popupAnchor: [0, -14]
-                    });
-                }
-                
-                var oneMarker =
-                    //
-                    //     [stations[i].lat,stations[i].lon],
-                    //  {
-                    //  	radius: 1000,
-                    //     color: color
-                    // });
-
-                    L.marker([stations[i].latitude, stations[i].longitude], {
-                        icon: myIcon
-                    });
-                oneMarker.bindTooltip("<b>Station:</b> " + stations[i].location + "<br>Field data for " + (stations[i].local).substring(0,19) + "<br> (<i>All dates and times are in Indian Std. Time</i>)");
-                oneMarker.name = stations[i].location;
-                oneMarker.fullname = stations[i].location;
-                oneMarker.lat = stations[i].latitude;
-                oneMarker.lon = stations[i].longitude;
-                oneMarker.addTo(markersLayer);
-            }
-            markersLayer.on("click", markerOnClick);
-            markersLayer.setZIndex(500);
-        }
-        function markerOnClick(e) {
-            if ($("#run_table option:selected").val() == "geos") {
-                var attributes = e.layer;
-                int_type = "Station";
-                $("#station").val(attributes.name + ',' + attributes.lat + ',' + attributes.lon);
-                titleforst = attributes.fullname;
-                get_ts();
-            } else {
-                alert("Please select GEOS as the platform to see the chart for station.")
-
-            }
-
-        }
 
         $('#toggleLayer').click(function () {
             if ($(this).is(':checked')) {
@@ -1745,6 +1631,138 @@ var LIBRARY_OBJECT = (function () {
                 }
             });
         };
+        function getStations(init_date){
+
+            var xhr = ajax_update_database("get-stations", {
+                "init_date":init_date
+            });
+            xhr.done(function (result) {
+                if ("success" in result) {
+                     stations = result.stations;
+                     console.log(stations);
+                } else {
+
+                }
+            });
+             var myIcon;
+        var markersLayer = L.featureGroup().addTo(map);
+        var pm25_legend = L.control({position: 'bottomright'});
+        pm25_legend.onAdd = function (map) {
+            function getColor(d) {
+                return d === '0-30' ? "#0c9a50" :
+                    d === '30-60' ? "#8fc24f" :
+                        d === '60-90' ? "#ffbb0c" :
+                            d === '90-120' ? "#ff9c0b" :
+                              d === '120-250' ? "#ff1c12" :
+                                "#d1250e";
+            }
+
+            var div = L.DomUtil.create('div', 'info pm25_legend');
+            var labels = ['<strong>PM2.5(&micro;gm<sup>-3</sup>)</strong>'];
+            var categories = ['0-30', '30-60', '60-90', '90-120', '120-250', '251 and up'];
+
+            for (var i = 0; i < categories.length; i++) {
+
+                div.innerHTML +=
+                    labels.push(
+                        '<i class="circle" style="background:' + getColor(categories[i]) + '"></i> ' +
+                        (categories[i] ? categories[i] : '+'));
+
+            }
+            div.innerHTML = labels.join('<br>');
+            return div;
+        };
+        pm25_legend.addTo(map);
+        if(stations!=undefined) {
+            if (stations.length == 0) {
+                alert("Could not load stations from database. Please retry later.");
+            } else {
+                for (var i = 0; i < stations.length; ++i) {
+                    if (stations[i].pm25 > 250) {
+                        myIcon = L.icon({
+                            iconUrl: '/static/aqx_india/images/six.png',
+                            iconSize: [16, 16],
+                            iconAnchor: [9, 21],
+                            popupAnchor: [0, -50]
+                        });
+                    } else if (stations[i].pm25 > 120 && stations[i].pm25 < 250) {
+                        myIcon = L.icon({
+                            iconUrl: '/static/aqx_india/images/five.png',
+                            iconSize: [16, 16],
+                            iconAnchor: [9, 21],
+                            popupAnchor: [0, -18]
+                        });
+                    } else if (stations[i].pm25 > 90 && stations[i].pm25 < 120) {
+                        myIcon = L.icon({
+                            iconUrl: '/static/aqx_india/images/four.png',
+                            iconSize: [16, 16],
+                            iconAnchor: [9, 21],
+                            popupAnchor: [0, -14]
+                        });
+
+                    } else if (stations[i].pm25 > 60 && stations[i].pm25 < 90) {
+                        myIcon = L.icon({
+                            iconUrl: '/static/aqx_india/images/three.png',
+                            iconSize: [16, 16],
+                            iconAnchor: [9, 21],
+                            popupAnchor: [0, -14]
+                        });
+                    } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
+                        myIcon = L.icon({
+                            iconUrl: '/static/aqx_india/images/two.png',
+                            iconSize: [16, 16],
+                            iconAnchor: [9, 21],
+                            popupAnchor: [0, -14]
+                        });
+                    } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
+                        myIcon = L.icon({
+                            iconUrl: '/static/aqx_india/images/one.png',
+                            iconSize: [16, 16],
+                            iconAnchor: [9, 21],
+                            popupAnchor: [0, -14]
+                        });
+                    }
+
+                    var oneMarker =
+                        //
+                        //     [stations[i].lat,stations[i].lon],
+                        //  {
+                        //  	radius: 1000,
+                        //     color: color
+                        // });
+
+                        L.marker([stations[i].latitude, stations[i].longitude], {
+                            icon: myIcon
+                        });
+                    oneMarker.bindTooltip("<b>Station:</b> " + stations[i].location + "<br>Field data for " + (stations[i].local).substring(0, 19) + "<br> (<i>All dates and times are in Indian Std. Time</i>)");
+                    oneMarker.name = stations[i].location;
+                    oneMarker.fullname = stations[i].location;
+                    oneMarker.lat = stations[i].latitude;
+                    oneMarker.lon = stations[i].longitude;
+                    oneMarker.addTo(markersLayer);
+                }
+                markersLayer.on("click", markerOnClick);
+                markersLayer.setZIndex(500);
+            }
+        }
+        else{
+            alert("Could not load stations from database. Please retry later.");
+        }
+        function markerOnClick(e) {
+            if ($("#run_table option:selected").val() == "geos") {
+                var attributes = e.layer;
+                int_type = "Station";
+                $("#station").val(attributes.name + ',' + attributes.lat + ',' + attributes.lon);
+                titleforst = attributes.fullname;
+                get_ts();
+            } else {
+                alert("Please select GEOS as the platform to see the chart for station.")
+
+            }
+
+        }
+
+        }
         $("#rd_table").change(function () {
             $("#date_table").empty();
             $("#hour_table").empty();
@@ -1768,8 +1786,9 @@ var LIBRARY_OBJECT = (function () {
                 }
 
             });
-
-
+  var datestr = ($("#date_table option:selected").val().split('/').reverse()[0]);
+                datestr = datestr.substring(0, 4) + '-' + datestr.substring(4, 6) + '-' + datestr.substring(6, 8);
+//getStations(datestr);
 
 
             $("#var_table").html('');
@@ -1795,7 +1814,7 @@ var LIBRARY_OBJECT = (function () {
                 var datestr = ($("#date_table option:selected").val().split('/').reverse()[0]);
                 datestr = datestr.substring(0, 4) + '-' + datestr.substring(4, 6) + '-' + datestr.substring(6, 8);
                 $('#info').text("Displaying " + datestr + " data on the map..");
-
+getStations(datestr);
 
                 var freq = ($("#freq_table option:selected").val());
                 var rd_type = ($("#rd_table option:selected").val());
