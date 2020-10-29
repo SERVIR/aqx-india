@@ -471,7 +471,7 @@ def get_station_data(init_date):
                                                                cfg.connection['password'],cfg.connection['port']))
         cur = conn.cursor()
         print("Getting ready to query db")
-        sql = "SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local FROM indiagrounddata s WHERE   parameter='pm25' and local like '"+init_date+"%' "
+        sql = "SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local FROM testindia s WHERE   parameter='pm25' and local like '"+init_date+"%' "
         print(sql)
         cur.execute(sql)
         print("out from query")
@@ -526,7 +526,7 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
         
         cur.execute(sql)
         '''              
-        cur.execute(("SELECT  local,value from indiagrounddata where location = '%s' and value is not null \
+        cur.execute(("SELECT  local,value from testindia where location = '%s' and value is not null \
                       and substring(local,12,2)  in ('02','05','08','11','14','17','20','23') \
                       and substring(local,1,19)  between '%s' and '%s'"), (str(station), sd, ed,))   # station is location,ed=end date,sd=start date
         '''

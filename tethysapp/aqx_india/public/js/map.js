@@ -1631,21 +1631,6 @@ var LIBRARY_OBJECT = (function () {
                 }
             });
         };
-        function getStations(init_date){
-
-            var xhr = ajax_update_database("get-stations", {
-                "init_date":init_date
-            });
-            xhr.done(function (result) {
-                if ("success" in result) {
-                     stations = result.stations;
-                     console.log(stations);
-                } else {
-
-                }
-            });
-             var myIcon;
-        var markersLayer = L.featureGroup().addTo(map);
         var pm25_legend = L.control({position: 'bottomright'});
         pm25_legend.onAdd = function (map) {
             function getColor(d) {
@@ -1673,10 +1658,29 @@ var LIBRARY_OBJECT = (function () {
             return div;
         };
         pm25_legend.addTo(map);
-        if(stations!=undefined) {
-            if (stations.length == 0) {
-                alert("Could not load stations from database. Please retry later.");
-            } else {
+        function getStations(init_date){
+            stations=[];
+            var xhr = ajax_update_database("get-stations", {
+                "init_date":init_date
+            });
+            xhr.done(function (result) {
+                if ("success" in result) {
+                     var markersLayer = L.featureGroup().addTo(map);
+                     stations = result.stations;
+                    
+                     if (stations.length == 0) {
+                        alert("Could not load stations from database. Please retry later.");
+                        if(markersLayer != undefined) map.removeLayer(markersLayer);
+            } else 
+            {
+            
+        
+             var myIcon;
+      
+       
+        if(stations!=undefined && stations.length > 0) {
+                console.log(stations);
+            
                 for (var i = 0; i < stations.length; ++i) {
                     if (stations[i].pm25 > 250) {
                         myIcon = L.icon({
@@ -1743,11 +1747,13 @@ var LIBRARY_OBJECT = (function () {
                 }
                 markersLayer.on("click", markerOnClick);
                 markersLayer.setZIndex(500);
-            }
+            
         }
         else{
-            alert("Could not load stations from database. Please retry later.");
+            //alert("Could not load stations from database. Please retry later.");
         }
+                } }
+        });
         function markerOnClick(e) {
             if ($("#run_table option:selected").val() == "geos") {
                 var attributes = e.layer;
