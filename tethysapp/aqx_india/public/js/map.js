@@ -1759,6 +1759,7 @@ var LIBRARY_OBJECT = (function () {
                                 oneMarker.lon = stations[i].longitude;
                                 oneMarker.addTo(markersLayer);
                             }
+                            map.addLayer(markersLayer);
                             markersLayer.on("click", markerOnClick);
                             markersLayer.setZIndex(500);
 
