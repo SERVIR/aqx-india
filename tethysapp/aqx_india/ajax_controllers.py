@@ -1,7 +1,7 @@
 """AJAX Controllers Module"""
 import requests
 from django.http import JsonResponse
-from .utils import gen_style_legend, get_pt_values, get_poylgon_values, get_time, get_pm25_data,generate_gif
+from .utils import gen_style_legend, get_pt_values, get_poylgon_values, get_time, get_pm25_data,generate_gif,get_station_data
 import json
 from django.views.decorators.csrf import csrf_exempt
 
@@ -72,6 +72,19 @@ def get_times(request):
         try:
             times = get_time(freq, run_type, run_date)
             return_obj["data"] = times
+            return_obj["success"] = "success"
+        except Exception as e:
+            return_obj["error"] = "Error processing request: "+ str(e)
+
+    return JsonResponse(return_obj)
+
+def get_stations(request):
+    return_obj = {}
+    if request.is_ajax() and request.method == 'POST':
+        init_date = request.POST["init_date"]
+        try:
+            stations = get_station_data(init_date)
+            return_obj["stations"] = stations
             return_obj["success"] = "success"
         except Exception as e:
             return_obj["error"] = "Error processing request: "+ str(e)
