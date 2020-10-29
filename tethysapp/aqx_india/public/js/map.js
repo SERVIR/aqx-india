@@ -40,6 +40,7 @@ var LIBRARY_OBJECT = (function () {
         tdWmsLayer,
         thredds_options,
         stations,
+        markersLayer,
         thredds_urls,
         threddss_wms_url,
         var_options,
@@ -133,7 +134,7 @@ var LIBRARY_OBJECT = (function () {
         map = L.map('map', {
             // timeDimension: true,
             // timeDimensionControl: true
-        // }).setView([15.8700, 100.9925], 6); This is for Thailand
+            // }).setView([15.8700, 100.9925], 6); This is for Thailand
         }).setView([23.006, 77.725], 5);
 
         legend = L.control({
@@ -271,7 +272,7 @@ var LIBRARY_OBJECT = (function () {
             }]
         });
 
-       // selectAdm.addTo(map);
+        // selectAdm.addTo(map);
 
         L.Control.InfoControl = L.Control.extend({
             initialize: function (options) {
@@ -495,9 +496,9 @@ var LIBRARY_OBJECT = (function () {
 
         };
         layersControl = L.control.layers.minimap(baselayers, overlays, {
-           collapsed: true
-       }).addTo(map);
-       L.control.browserPrint().addTo(map);
+            collapsed: true
+        }).addTo(map);
+        L.control.browserPrint().addTo(map);
         var customActionToPrint = function (context, mode) {
             return function () {
                 window.alert("Please check if any overlays are selected before you print..");
@@ -536,8 +537,8 @@ var LIBRARY_OBJECT = (function () {
 
             }
         });
-            document.getElementById("prev").onclick = alterDate.bind(null, -1);
-            document.getElementById("next").onclick = alterDate.bind(null, 1);
+        document.getElementById("prev").onclick = alterDate.bind(null, -1);
+        document.getElementById("next").onclick = alterDate.bind(null, 1);
 
         map.on("draw:drawstart ", function (e) {
             clear_coords();
@@ -596,18 +597,18 @@ var LIBRARY_OBJECT = (function () {
                 attribution: '© ' + mapLink + ' Contributors',
                 maxZoom: 18,
             }).addTo(map);
-         L.esri.dynamicMapLayer({
+        L.esri.dynamicMapLayer({
             url: 'https://wwf-sight-maps.org/arcgis/rest/services/Global/Administrative_Boundaries_GADM/MapServer',
-             layers:[0,1],
+            layers: [0, 1],
             opacity: 0.7,
-             zIndex:99998
-          }).addTo(map);
+            zIndex: 99998
+        }).addTo(map);
         L.esri.tiledMapLayer({
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer',
-             layers:[0],
+            layers: [0],
             opacity: 0.7,
-             zIndex:99999
-          }).addTo(map);
+            zIndex: 99999
+        }).addTo(map);
 
         var wmsUrl = "https://tethys.servirglobal.net/thredds/wms/tethys/HIWAT/hkhControl_20180329-1800_latlon.nc";
         var wmsLayer = L.tileLayer.wms(wmsUrl, {
@@ -626,7 +627,6 @@ var LIBRARY_OBJECT = (function () {
         rwmsLayer = L.tileLayer.wms();
     };
 
-
     init_events = function () {
         map.on("mousemove", function (event) {
             document.getElementById('mouse-position').innerHTML = 'Latitude:' + event.latlng.lat.toFixed(5) + ', Longitude:' + event.latlng.lng.toFixed(5);
@@ -638,6 +638,8 @@ var LIBRARY_OBJECT = (function () {
     init_all = function () {
         init_jquery_vars();
         init_map();
+        markersLayer = L.featureGroup().addTo(map);
+
         init_events();
         init_dropdown();
         init_opacity_slider();
@@ -645,7 +647,7 @@ var LIBRARY_OBJECT = (function () {
 
     init_opacity_slider = function () {
         opacity = 1;
-       // $("#opacity").text(opacity);
+        // $("#opacity").text(opacity);
         $("#opacity-slider").slider({
             value: opacity,
             min: 0,
@@ -674,8 +676,8 @@ var LIBRARY_OBJECT = (function () {
 
         var style = 'boxfill/' + styling;
         opacity = $('#opacity-slider').slider("option", "value");
-        if(time!="") {
-           var d = new Date(time);
+        if (time != "") {
+            var d = new Date(time);
 
             d.setHours(d.getHours() - 5);
             d.setMinutes(d.getMinutes() - 30);
@@ -691,8 +693,8 @@ var LIBRARY_OBJECT = (function () {
             opacity: opacity,
             version: '1.3.0',
             zIndex: 100,
-            ABOVEMAXCOLOR:'extend',
-            BELOWMINCOLOR:'extend'
+            ABOVEMAXCOLOR: 'extend',
+            BELOWMINCOLOR: 'extend'
 
         });
 
@@ -706,8 +708,8 @@ var LIBRARY_OBJECT = (function () {
                 opacity: opacity,
                 version: '1.3.0',
                 zIndex: 100,
-                ABOVEMAXCOLOR:'extend',
-                BELOWMINCOLOR:'extend'
+                ABOVEMAXCOLOR: 'extend',
+                BELOWMINCOLOR: 'extend'
             });
         }
         tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
@@ -717,8 +719,8 @@ var LIBRARY_OBJECT = (function () {
             zIndex: 100,
         });
         tdWmsLayer.addTo(map);
-        var link = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=" + layer_id + "&time=" +time + "&colorscalerange=" + range + "&PALETTE=" + styling + "&transparent=TRUE";
-         var imgsrc = link;
+        var link = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=" + layer_id + "&time=" + time + "&colorscalerange=" + range + "&PALETTE=" + styling + "&transparent=TRUE";
+        var imgsrc = link;
 
         if (time == "") {
 
@@ -742,8 +744,8 @@ var LIBRARY_OBJECT = (function () {
         var myConfig = {
             type: "gauge",
             legend: {
-                  align: 'center',
-               offsetY:260
+                align: 'center',
+                offsetY: 260
 
 
             },
@@ -757,7 +759,7 @@ var LIBRARY_OBJECT = (function () {
                 },
                 //gauge interval colors to match legend in pm25
                 //labels: ['0', '', '', '', '20', '', '', '', '40', '', '', '', '60', '', '', '', '80', '', '', '', '100', '', '', '', '120', '', '', '','140', '', '', '','160', '', '', '','Max'],
-                labels: ['0', '', '30',  '', '60',  '', '90',  '', '120', '', '', '','', '250', '', 'Max'],
+                labels: ['0', '', '30', '', '60', '', '90', '', '120', '', '', '', '', '250', '', 'Max'],
                 item: {  //Scale Label Styling
                     "font-color": "black",
                     "font-family": "Arial",
@@ -889,10 +891,10 @@ var LIBRARY_OBJECT = (function () {
 
         //  var secondday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + (((parseInt(rd_type.substring(6, 8)) + 1).toString().length < 2) ? ('0' + (parseInt(rd_type.substring(6, 8)) + 1)) : (parseInt(rd_type.substring(6, 8)) + 1));
         //   var thirdday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + (((parseInt(rd_type.substring(6, 8)) + 2).toString().length < 2) ? ('0' + (parseInt(rd_type.substring(6, 8)) + 2)) : (parseInt(rd_type.substring(6, 8)) + 2));
-      
+
         xhr.done(function (result) {
             if ("success" in result) {
-              
+
                 if (interaction == "Station") {
 
                     var values = result.data["field_data"];
@@ -912,7 +914,7 @@ var LIBRARY_OBJECT = (function () {
                     document.getElementById("day2_guage").innerHTML = secondday;
                     document.getElementById("day3_guage").innerHTML = thirdday;
 
-                  
+
                     //     populateValues(values);
                     field_day1_avg = 0
                     field_day2_avg = 0;
@@ -960,17 +962,17 @@ var LIBRARY_OBJECT = (function () {
                     //console.log("station");
                     gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
                     document.getElementById("datevalue").innerHTML = document.getElementById("day1_guage").innerHTML;
-                      document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 07:00";
-            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 22:00";
+                    document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML + " 07:00";
+                    document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML + " 22:00";
                     $("#day1_guage").css("background-color", "black");
                     $("#day1_guage").css("color", "white");
                     $("#day2_guage").css("background-color", "gray");
                     $("#day2_guage").css("color", "white");
                     $("#day3_guage").css("background-color", "gray");
                     $("#day3_guage").css("color", "white");
-                  
+
                 }
-                
+
 
                 var arr = [];
                 var title = "";
@@ -980,7 +982,7 @@ var LIBRARY_OBJECT = (function () {
                 if (units == 'mcgm-3') {
                     units = '&micro;gm<sup>-3</sup>';
                 }
-                
+
                 if (interaction == "Station") {
                     document.getElementsByClassName("forpm25")[0].style.display = 'table';
                     document.getElementsByClassName("forpm25")[1].style.display = 'table';
@@ -1002,7 +1004,7 @@ var LIBRARY_OBJECT = (function () {
                         //         radius: 3
                         //     }
                         // },
-                     {
+                        {
                             data: result.data["field_data"],
                             name: "PM2.5 Measurement",
                             color: "blue"
@@ -1012,13 +1014,13 @@ var LIBRARY_OBJECT = (function () {
                             name: "GEOS PM25 data",//
                             color: "black"
                         },
-                          // {
-                          //      data: result.data["geos_pm25"],
-                          //      name: "GEOS PM25 data",
-                          //      color: "red"
-                          //  }
+                        // {
+                        //      data: result.data["geos_pm25"],
+                        //      name: "GEOS PM25 data",
+                        //      color: "red"
+                        //  }
                     ];
-                    document.getElementById('pmlabel').style.display="block";
+                    document.getElementById('pmlabel').style.display = "block";
                 } else {
 
                     document.getElementsByClassName("forpm25")[0].style.display = 'none';
@@ -1038,7 +1040,7 @@ var LIBRARY_OBJECT = (function () {
                             radius: 3
                         }
                     }];
-                    document.getElementById('pmlabel').style.display="none";
+                    document.getElementById('pmlabel').style.display = "none";
                 }
                 if (interaction == "Station") {
 
@@ -1085,7 +1087,7 @@ var LIBRARY_OBJECT = (function () {
                         zoomType: 'x',
                         events: {
                             load: function () {
-                                var label = this.renderer.label($("#run_table option:selected").val()=="geos"?"Graph dates and times are in Indian Std. Time":"Graph dates and times are in UTC time")
+                                var label = this.renderer.label($("#run_table option:selected").val() == "geos" ? "Graph dates and times are in Indian Std. Time" : "Graph dates and times are in UTC time")
                                     .css({
                                         width: '400px',
                                         fontSize: '12px'
@@ -1165,7 +1167,7 @@ var LIBRARY_OBJECT = (function () {
                 $(".error").html('<h3>Error Processing Request.</h3>');
 
                 $('.forpm25').hide();
-                 $('#pmlabel').hide();
+                $('#pmlabel').hide();
 
             }
         });
@@ -1228,7 +1230,7 @@ var LIBRARY_OBJECT = (function () {
     //    // compare.addTo(map);
     //
     // };
-  //  $("#btn-add-compare").on('click', add_compare);
+    //  $("#btn-add-compare").on('click', add_compare);
 
     function handleMouseMove(e, ctx, width, height) {
         $('.tippy').removeClass('hidden');
@@ -1425,24 +1427,37 @@ var LIBRARY_OBJECT = (function () {
             var noption = new Option(item[0], item[1]);
             $("#style_table").append(new_option);
             $("#cstyle_table").append(noption);
-             if (item[0].toUpperCase() == "PM25") {
-                    new_option.selected = true;
-                }
+            if (item[0].toUpperCase() == "PM25") {
+                new_option.selected = true;
+            }
         });
- var aodt_dname="",aodt_val="",aoda_dname="",aoda_val="",geos_dname="",geos_val="",fire_dname="",fire_val="";
+        var aodt_dname = "", aodt_val = "", aoda_dname = "", aoda_val = "", geos_dname = "", geos_val = "",
+            fire_dname = "", fire_val = "";
         $.each(thredds_options['catalog'], function (item, i) {
 
             if (item.toUpperCase() != "GEOS_TAVG1_2D_SLV_NX" && item.toUpperCase() != "GEOS_TAVG3_2D_AER_NX") {
 
-                if(item=="aod_aqua"){ aoda_dname="AOD Observations (AQUA-Monthly)";aoda_val=item;}
-                if(item=="aod_terra"){ aodt_dname="AOD Observations (TERRA-Monthly)";aodt_val=item;}
-                if(item=="fire") {fire_dname="Fire Observations (Monthly)";fire_val=item;}
-                if(item=="geos"){ geos_dname="AQ Forecast (GEOS)";geos_val=item;}
+                if (item == "aod_aqua") {
+                    aoda_dname = "AOD Observations (AQUA-Monthly)";
+                    aoda_val = item;
+                }
+                if (item == "aod_terra") {
+                    aodt_dname = "AOD Observations (TERRA-Monthly)";
+                    aodt_val = item;
+                }
+                if (item == "fire") {
+                    fire_dname = "Fire Observations (Monthly)";
+                    fire_val = item;
+                }
+                if (item == "geos") {
+                    geos_dname = "AQ Forecast (GEOS)";
+                    geos_val = item;
+                }
 
 
-            //    var new_option = new Option(dname, item);
-           //     var noption = new Option(dname, item);
-              //  var noption2 = new Option(dname, item);
+                //    var new_option = new Option(dname, item);
+                //     var noption = new Option(dname, item);
+                //  var noption2 = new Option(dname, item);
                 // $("#run_table").append(new_option);
                 // $("#lrun_table").append(noption);
                 // $("#rrun_table").append(noption2);
@@ -1450,35 +1465,34 @@ var LIBRARY_OBJECT = (function () {
             }
 
         });
-          var new_option = new Option(geos_dname, geos_val);
-          var new_option1 = new Option(geos_dname, geos_val);
-          var new_option2 = new Option(geos_dname, geos_val);
-              $("#run_table").append(new_option);
-                $("#lrun_table").append(new_option1);
-                 $("#rrun_table").append(new_option2);
-                           new_option = new Option(fire_dname, fire_val);
-                                                      new_option1 = new Option(fire_dname, fire_val);
-                           new_option2 = new Option(fire_dname, fire_val);
+        var new_option = new Option(geos_dname, geos_val);
+        var new_option1 = new Option(geos_dname, geos_val);
+        var new_option2 = new Option(geos_dname, geos_val);
+        $("#run_table").append(new_option);
+        $("#lrun_table").append(new_option1);
+        $("#rrun_table").append(new_option2);
+        new_option = new Option(fire_dname, fire_val);
+        new_option1 = new Option(fire_dname, fire_val);
+        new_option2 = new Option(fire_dname, fire_val);
 
-                                         $("#run_table").append(new_option);
-                                          $("#lrun_table").append(new_option1);
-                                                           $("#rrun_table").append(new_option2);
+        $("#run_table").append(new_option);
+        $("#lrun_table").append(new_option1);
+        $("#rrun_table").append(new_option2);
 
 
+        new_option = new Option(aoda_dname, aoda_val);
+        new_option1 = new Option(aoda_dname, aoda_val);
+        new_option2 = new Option(aoda_dname, aoda_val);
+        $("#run_table").append(new_option);
+        $("#lrun_table").append(new_option1);
+        $("#rrun_table").append(new_option2);
 
-                           new_option = new Option(aoda_dname, aoda_val);
-                           new_option1 = new Option(aoda_dname, aoda_val);
-                           new_option2 = new Option(aoda_dname, aoda_val);
-                                         $("#run_table").append(new_option);
-                                          $("#lrun_table").append(new_option1);
-                                                           $("#rrun_table").append(new_option2);
-
-                                          new_option = new Option(aodt_dname, aodt_val);
-                                            new_option1 = new Option(aodt_dname, aodt_val);
-                           new_option2 = new Option(aodt_dname, aodt_val);
-                                         $("#run_table").append(new_option);
-                                          $("#lrun_table").append(new_option1);
-                                                           $("#rrun_table").append(new_option2);
+        new_option = new Option(aodt_dname, aodt_val);
+        new_option1 = new Option(aodt_dname, aodt_val);
+        new_option2 = new Option(aodt_dname, aodt_val);
+        $("#run_table").append(new_option);
+        $("#lrun_table").append(new_option1);
+        $("#rrun_table").append(new_option2);
 
 
         $("#run_table").change(function () {
@@ -1612,18 +1626,18 @@ var LIBRARY_OBJECT = (function () {
                 "freq": freq,
                 "run_date": rd_type.split('/').reverse()[0]
             });
-             var times=[];
+            var times = [];
             xhr.done(function (result) {
                 if ("success" in result) {
-                     times = result.data["times"];
+                    times = result.data["times"];
                     time_global = times[0];
-                      $("#hour_table").html('');
+                    $("#hour_table").html('');
                     times.forEach(function (time, i) {
-                        var date= new Date(time);
+                        var date = new Date(time);
                         date.setHours(date.getHours() + 5);
                         date.setMinutes(date.getMinutes() + 30);
-                        
-                        var opt = new Option(date.toISOString().substring(0, 10)+' '+date.toISOString().substring(11,19), date.toISOString());
+
+                        var opt = new Option(date.toISOString().substring(0, 10) + ' ' + date.toISOString().substring(11, 19), date.toISOString());
                         $("#hour_table").append(opt);
                     });
                 } else {
@@ -1638,8 +1652,8 @@ var LIBRARY_OBJECT = (function () {
                     d === '30-60' ? "#8fc24f" :
                         d === '60-90' ? "#ffbb0c" :
                             d === '90-120' ? "#ff9c0b" :
-                              d === '120-250' ? "#ff1c12" :
-                                "#d1250e";
+                                d === '120-250' ? "#ff1c12" :
+                                    "#d1250e";
             }
 
             var div = L.DomUtil.create('div', 'info pm25_legend');
@@ -1658,117 +1672,119 @@ var LIBRARY_OBJECT = (function () {
             return div;
         };
         pm25_legend.addTo(map);
-        function getStations(init_date){
-            stations=[];
+
+        function getStations(init_date) {
+            stations = [];
             var xhr = ajax_update_database("get-stations", {
-                "init_date":init_date
+                "init_date": init_date
             });
             xhr.done(function (result) {
                 if ("success" in result) {
-                     var markersLayer = L.featureGroup().addTo(map);
-                     stations = result.stations;
-                    
-                     if (stations.length == 0) {
+
+                    stations = result.stations;
+
+                    if (stations.length == 0) {
                         alert("Could not load stations from database. Please retry later.");
-                        if(markersLayer != undefined) map.removeLayer(markersLayer);
-            } else 
-            {
-            
-        
-             var myIcon;
-      
-       
-        if(stations!=undefined && stations.length > 0) {
-                console.log(stations);
-            
-                for (var i = 0; i < stations.length; ++i) {
-                    if (stations[i].pm25 > 250) {
-                        myIcon = L.icon({
-                            iconUrl: '/static/aqx_india/images/six.png',
-                            iconSize: [16, 16],
-                            iconAnchor: [9, 21],
-                            popupAnchor: [0, -50]
-                        });
-                    } else if (stations[i].pm25 > 120 && stations[i].pm25 < 250) {
-                        myIcon = L.icon({
-                            iconUrl: '/static/aqx_india/images/five.png',
-                            iconSize: [16, 16],
-                            iconAnchor: [9, 21],
-                            popupAnchor: [0, -18]
-                        });
-                    } else if (stations[i].pm25 > 90 && stations[i].pm25 < 120) {
-                        myIcon = L.icon({
-                            iconUrl: '/static/aqx_india/images/four.png',
-                            iconSize: [16, 16],
-                            iconAnchor: [9, 21],
-                            popupAnchor: [0, -14]
-                        });
+                        if (markersLayer != undefined) map.removeLayer(markersLayer);
+                    } else {
 
-                    } else if (stations[i].pm25 > 60 && stations[i].pm25 < 90) {
-                        myIcon = L.icon({
-                            iconUrl: '/static/aqx_india/images/three.png',
-                            iconSize: [16, 16],
-                            iconAnchor: [9, 21],
-                            popupAnchor: [0, -14]
-                        });
-                    } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
-                        myIcon = L.icon({
-                            iconUrl: '/static/aqx_india/images/two.png',
-                            iconSize: [16, 16],
-                            iconAnchor: [9, 21],
-                            popupAnchor: [0, -14]
-                        });
-                    } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
-                        myIcon = L.icon({
-                            iconUrl: '/static/aqx_india/images/one.png',
-                            iconSize: [16, 16],
-                            iconAnchor: [9, 21],
-                            popupAnchor: [0, -14]
-                        });
+
+                        var myIcon;
+
+
+                        if (stations != undefined && stations.length > 0) {
+                            console.log(stations);
+
+                            for (var i = 0; i < stations.length; ++i) {
+                                if (stations[i].pm25 > 250) {
+                                    myIcon = L.icon({
+                                        iconUrl: '/static/aqx_india/images/six.png',
+                                        iconSize: [16, 16],
+                                        iconAnchor: [9, 21],
+                                        popupAnchor: [0, -50]
+                                    });
+                                } else if (stations[i].pm25 > 120 && stations[i].pm25 < 250) {
+                                    myIcon = L.icon({
+                                        iconUrl: '/static/aqx_india/images/five.png',
+                                        iconSize: [16, 16],
+                                        iconAnchor: [9, 21],
+                                        popupAnchor: [0, -18]
+                                    });
+                                } else if (stations[i].pm25 > 90 && stations[i].pm25 < 120) {
+                                    myIcon = L.icon({
+                                        iconUrl: '/static/aqx_india/images/four.png',
+                                        iconSize: [16, 16],
+                                        iconAnchor: [9, 21],
+                                        popupAnchor: [0, -14]
+                                    });
+
+                                } else if (stations[i].pm25 > 60 && stations[i].pm25 < 90) {
+                                    myIcon = L.icon({
+                                        iconUrl: '/static/aqx_india/images/three.png',
+                                        iconSize: [16, 16],
+                                        iconAnchor: [9, 21],
+                                        popupAnchor: [0, -14]
+                                    });
+                                } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
+                                    myIcon = L.icon({
+                                        iconUrl: '/static/aqx_india/images/two.png',
+                                        iconSize: [16, 16],
+                                        iconAnchor: [9, 21],
+                                        popupAnchor: [0, -14]
+                                    });
+                                } else if (stations[i].pm25 >= 30 && stations[i].pm25 < 60) {
+                                    myIcon = L.icon({
+                                        iconUrl: '/static/aqx_india/images/one.png',
+                                        iconSize: [16, 16],
+                                        iconAnchor: [9, 21],
+                                        popupAnchor: [0, -14]
+                                    });
+                                }
+
+                                var oneMarker =
+                                    //
+                                    //     [stations[i].lat,stations[i].lon],
+                                    //  {
+                                    //  	radius: 1000,
+                                    //     color: color
+                                    // });
+
+                                    L.marker([stations[i].latitude, stations[i].longitude], {
+                                        icon: myIcon
+                                    });
+                                oneMarker.bindTooltip("<b>Station:</b> " + stations[i].location + "<br>Field data for " + (stations[i].local).substring(0, 19) + "<br> (<i>All dates and times are in Indian Std. Time</i>)");
+                                oneMarker.name = stations[i].location;
+                                oneMarker.fullname = stations[i].location;
+                                oneMarker.lat = stations[i].latitude;
+                                oneMarker.lon = stations[i].longitude;
+                                oneMarker.addTo(markersLayer);
+                            }
+                            markersLayer.on("click", markerOnClick);
+                            markersLayer.setZIndex(500);
+
+                        } else {
+                            //alert("Could not load stations from database. Please retry later.");
+                        }
                     }
-
-                    var oneMarker =
-                        //
-                        //     [stations[i].lat,stations[i].lon],
-                        //  {
-                        //  	radius: 1000,
-                        //     color: color
-                        // });
-
-                        L.marker([stations[i].latitude, stations[i].longitude], {
-                            icon: myIcon
-                        });
-                    oneMarker.bindTooltip("<b>Station:</b> " + stations[i].location + "<br>Field data for " + (stations[i].local).substring(0, 19) + "<br> (<i>All dates and times are in Indian Std. Time</i>)");
-                    oneMarker.name = stations[i].location;
-                    oneMarker.fullname = stations[i].location;
-                    oneMarker.lat = stations[i].latitude;
-                    oneMarker.lon = stations[i].longitude;
-                    oneMarker.addTo(markersLayer);
                 }
-                markersLayer.on("click", markerOnClick);
-                markersLayer.setZIndex(500);
-            
-        }
-        else{
-            //alert("Could not load stations from database. Please retry later.");
-        }
-                } }
-        });
-        function markerOnClick(e) {
-            if ($("#run_table option:selected").val() == "geos") {
-                var attributes = e.layer;
-                int_type = "Station";
-                $("#station").val(attributes.name + ',' + attributes.lat + ',' + attributes.lon);
-                titleforst = attributes.fullname;
-                get_ts();
-            } else {
-                alert("Please select GEOS as the platform to see the chart for station.")
+            });
+
+            function markerOnClick(e) {
+                if ($("#run_table option:selected").val() == "geos") {
+                    var attributes = e.layer;
+                    int_type = "Station";
+                    $("#station").val(attributes.name + ',' + attributes.lat + ',' + attributes.lon);
+                    titleforst = attributes.fullname;
+                    get_ts();
+                } else {
+                    alert("Please select GEOS as the platform to see the chart for station.")
+
+                }
 
             }
 
         }
 
-        }
         $("#rd_table").change(function () {
             $("#date_table").empty();
             $("#hour_table").empty();
@@ -1779,12 +1795,12 @@ var LIBRARY_OBJECT = (function () {
             var str = rd_type.split('/').reverse()[0];
 
             // console.log(thredds_options['catalog'][run_type][freq]);
-            var date_arr=thredds_options['catalog'][run_type][freq];
-            var date_arr_sorted=date_arr.sort().reverse();
+            var date_arr = thredds_options['catalog'][run_type][freq];
+            var date_arr_sorted = date_arr.sort().reverse();
             date_arr_sorted.forEach(function (item, i) {
 
                 var opt = item.split('/').reverse()[0];
-                var newdate = opt.substring(0, 4) + '-' + opt.substring(4, 6) + '-' + opt.substring(6, 8)+" 05:30:00";
+                var newdate = opt.substring(0, 4) + '-' + opt.substring(4, 6) + '-' + opt.substring(6, 8) + " 05:30:00";
                 if (run_type == "geos") {
                     var new_option2 = new Option(newdate, item);
 
@@ -1792,8 +1808,8 @@ var LIBRARY_OBJECT = (function () {
                 }
 
             });
-  var datestr = ($("#date_table option:selected").val().split('/').reverse()[0]);
-                datestr = datestr.substring(0, 4) + '-' + datestr.substring(4, 6) + '-' + datestr.substring(6, 8);
+            var datestr = ($("#date_table option:selected").val().split('/').reverse()[0]);
+            datestr = datestr.substring(0, 4) + '-' + datestr.substring(4, 6) + '-' + datestr.substring(6, 8);
 //getStations(datestr);
 
 
@@ -1804,9 +1820,9 @@ var LIBRARY_OBJECT = (function () {
                     var value = item["display_name"];
                     var new_option = new Option(value, item["id"]);
                     $("#var_table").append(new_option);
-                      if (item["id"].toUpperCase() == "GEOSPM25") {
-                    new_option.selected = true;
-                }
+                    if (item["id"].toUpperCase() == "GEOSPM25") {
+                        new_option.selected = true;
+                    }
                 }
             });
 
@@ -1820,7 +1836,7 @@ var LIBRARY_OBJECT = (function () {
                 var datestr = ($("#date_table option:selected").val().split('/').reverse()[0]);
                 datestr = datestr.substring(0, 4) + '-' + datestr.substring(4, 6) + '-' + datestr.substring(6, 8);
                 $('#info').text("Displaying " + datestr + " data on the map..");
-getStations(datestr);
+                getStations(datestr);
 
                 var freq = ($("#freq_table option:selected").val());
                 var rd_type = ($("#rd_table option:selected").val());
@@ -1835,8 +1851,8 @@ getStations(datestr);
                 var rmax = $("#range-max").val();
                 add_wms(run_type, freq, rd_type, var_type, rmin, rmax, style, datestr + 'T07:00:00Z');
 
-  $("#hour_table").html('');
-         get_times(rd_type);
+                $("#hour_table").html('');
+                get_times(rd_type);
 
             }
 
@@ -1916,7 +1932,7 @@ getStations(datestr);
 
         $("#opacity-slider").on("slidechange", function (event, ui) {
             opacity = ui.value;
-          //  $("#opacity").text(opacity);
+            //  $("#opacity").text(opacity);
             tdWmsLayer.setOpacity(opacity);
 
         });
@@ -1964,8 +1980,8 @@ getStations(datestr);
         $("#day1_guage").click(function () {
             gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
             document.getElementById("datevalue").innerHTML = document.getElementById("day1_guage").innerHTML;
-            document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 07:00";
-            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 22:00";
+            document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML + " 07:00";
+            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML + " 22:00";
             $(this).css("background-color", "black");
             $("#day2_guage").css("background-color", "gray");
             $("#day3_guage").css("background-color", "gray");
@@ -1973,8 +1989,8 @@ getStations(datestr);
         $("#day2_guage").click(function () {
             gen_chart(field_day2_avg < 0 ? -1 : field_day2_avg, forecast_day2_avg < 0 ? -1 : forecast_day2_avg);
             document.getElementById("datevalue").innerHTML = document.getElementById("day2_guage").innerHTML;
-              document.getElementById("fromd").innerHTML = document.getElementById("day2_guage").innerHTML+" 01:00";
-            document.getElementById("tod").innerHTML = document.getElementById("day2_guage").innerHTML+" 22:00";
+            document.getElementById("fromd").innerHTML = document.getElementById("day2_guage").innerHTML + " 01:00";
+            document.getElementById("tod").innerHTML = document.getElementById("day2_guage").innerHTML + " 22:00";
             $(this).css("background-color", "black");
             $("#day1_guage").css("background-color", "gray");
             $("#day3_guage").css("background-color", "gray");
@@ -1982,8 +1998,8 @@ getStations(datestr);
         $("#day3_guage").click(function () {
             gen_chart(field_day3_avg < 0 ? -1 : field_day3_avg, forecast_day3_avg < 0 ? -1 : forecast_day3_avg);
             document.getElementById("datevalue").innerHTML = document.getElementById("day3_guage").innerHTML;
-              document.getElementById("fromd").innerHTML = document.getElementById("day3_guage").innerHTML+" 01:00";
-            document.getElementById("tod").innerHTML = document.getElementById("day3_guage").innerHTML+" 22:00";
+            document.getElementById("fromd").innerHTML = document.getElementById("day3_guage").innerHTML + " 01:00";
+            document.getElementById("tod").innerHTML = document.getElementById("day3_guage").innerHTML + " 22:00";
             $(this).css("background-color", "black");
             $("#day2_guage").css("background-color", "gray");
             $("#day1_guage").css("background-color", "gray");
