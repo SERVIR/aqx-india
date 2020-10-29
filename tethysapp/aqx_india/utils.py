@@ -471,7 +471,7 @@ def get_station_data(init_date):
                                                                cfg.connection['password'],cfg.connection['port']))
         cur = conn.cursor()
         print("Getting ready to query db")
-        sql = "SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local FROM testindia s WHERE   parameter='pm25' and local like '"+init_date+"%' "
+        sql = "SELECT  DISTINCT ON (s.location) s.location, s.parameter, s.latitude, s.longitude, s.value, s.local FROM indiagrounddata s WHERE   parameter='pm25' and local like '"+init_date+"%' "
         print(sql)
         cur.execute(sql)
         print("out from query")
@@ -518,7 +518,7 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
         sd = date_obj.strftime("%Y-%m-%d %H:%M:%S")
         ed = end_date.strftime("%Y-%m-%d %H:%M:%S")
        
-        sql="SELECT  local,value from testindia where location = '"+station+"' and value is not null \
+        sql="SELECT  local,value from indiagrounddata where location = '"+station+"' and value is not null \
                       and parameter='pm25' \
                       and substring(local,12,2)  in ('01','04','07','10','13','16','19','22') \
                       and substring(local,1,19)  between '"+sd+"' and '" +ed+"' "
@@ -546,7 +546,7 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
             ts_plot.append([time_stamp, float(str(pm25))])
             
             
-        
+
         ts_plot.sort()
         pm25_data["field_data"] = ts_plot
         pm25_data["ml_pm25"] = geos_pm25_data["ml_pm25"]
