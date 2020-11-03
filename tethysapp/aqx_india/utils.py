@@ -93,7 +93,7 @@ def get_styles():
         ('Ferret', 'ferret'),
         ('Reflectivity', 'enspmm-refc'),
         ('PM25', 'pm25_india'),
-        ('PM25 RAMP', 'pm25ramp'),
+        ('PM25 RAMP', 'pm25_india_ramp'),
         # ('Probability', 'prob'),
         # ('White-Blue', whiteblue'),
         # ('Grace', 'grace'),
